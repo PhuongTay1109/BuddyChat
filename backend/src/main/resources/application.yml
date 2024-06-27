@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: backend
+  data:
+    mongodb:
+      uri: mongodb+srv://tayphuong1109:PhuongTay110903%40@javaphuongtay.qkqk0o3.mongodb.net/?ssl=true&retryWrites=true&w=majority&appName=JavaPhuongTay
+      database: simple_blog
+# springdoc:
+#   api-docs:
+#     enabled: true
+#   swagger-ui:
+#     enabled: true
