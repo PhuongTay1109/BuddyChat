@@ -94,9 +94,9 @@ public class UserServiceImpl implements UserService {
 				.roles(roles)
 				.build();
 		
-		userRepository.save(user);
+		userRepository.save(user); // save user to database
 		
-		emailVerificationTokenService.sendEmailConfirmation(email);
+		emailVerificationTokenService.sendEmailConfirmation(email); // send confirmation mail
 		
 		return userMapper.toUserResponse(user);
 	}
