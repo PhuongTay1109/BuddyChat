@@ -2,11 +2,17 @@ package com.buddy.chat.dto.response;
 
 import java.time.LocalDateTime;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
-@Data
-@AllArgsConstructor
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
+
+@Setter
+@Getter
+@Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponseDTO {
 
     LocalDateTime timestamp;

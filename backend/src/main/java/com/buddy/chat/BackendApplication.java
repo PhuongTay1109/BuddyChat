@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.buddy.chat.model.Role;
 import com.buddy.chat.model.User;
@@ -20,13 +19,13 @@ public class BackendApplication implements CommandLineRunner {
 	private UserRepository userRepository;
 	@Autowired
 	private RoleRepository roleRepository;
-	@Autowired
-	private PasswordEncoder passwordEncoder;
 
 	public static void main(String[] args) {
 		SpringApplication.run(BackendApplication.class, args);
 	}
 
+
+//
 	@Override
 	public void run(String... args) throws Exception {
 		Role adminRole;
@@ -41,20 +40,37 @@ public class BackendApplication implements CommandLineRunner {
 			System.out.println(userRole);
 		}
 
-		if (userRepository.findByUsername("admin") != null) {
+		if (userRepository.findByUsername("admin") == null) {
 			Set<Role> roles = new HashSet<>();
 			roles.add(roleRepository.findByAuthority("ROLE_ADMIN"));
-			User admin = new User("admin", "123", "admin@gmail", roles);
+			User admin = User.builder()
+					.username("admin")
+					.password("123")
+					.email("admin@gmail")
+					.firstName("Im")
+					.lastName("Admin")
+					.profilePicture("")
+					.isEnabled(true)
+					.roles(roles)
+					.build();
 			userRepository.save(admin);
 		}
-		if (userRepository.findByUserId(0) == null) {
+		if (userRepository.findByUserId(2) == null) {
 			for (int i = 0; i < 5; ++i) {
 				Set<Role> roles = new HashSet<>();
 				roles.add(roleRepository.findByAuthority("ROLE_USER"));
-				User user = new User("ASd", "base", "asdasd", roles);
+				User user = User.builder()
+						.username("user")
+						.password("123")
+						.email("user@gmail")
+						.firstName("Im")
+						.lastName("User")
+						.profilePicture("")
+						.isEnabled(true)
+						.roles(roles)
+						.build();
 				userRepository.save(user);
 			}
 		}
 	}
-
 }

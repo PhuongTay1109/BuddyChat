@@ -13,15 +13,14 @@ import org.springframework.stereotype.Service;
 import com.buddy.chat.model.DatabaseSequence;
 import com.buddy.chat.service.SequenceGeneratorService;
 
+import lombok.RequiredArgsConstructor;
+
 // auto-generate id, just copy and paste
 @Service
+@RequiredArgsConstructor
 public class SequenceGeneratorServiceImpl implements SequenceGeneratorService {
-    private MongoOperations mongoOperations;
+    private final MongoOperations mongoOperations;
 
-    @Autowired
-    public SequenceGeneratorServiceImpl(MongoOperations mongoOperations) {
-        this.mongoOperations = mongoOperations;
-    }
     @Override
     public long generateSequence(String seqName) {
         DatabaseSequence counter = mongoOperations.findAndModify(
