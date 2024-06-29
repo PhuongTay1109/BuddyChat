@@ -52,16 +52,37 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #4070f4;
+    background-color: #91a2d2;
     column-gap: 30px;
 }
-.form{
+.custom-form {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important; /* Align form items to the left */
+    padding: 20px; /* Add padding to the form */
+}
+
+.input-field {
+    margin-bottom: 15px; /* Add margin between input fields */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add this line for shadow */
+
+}
+
+.error {
+    color: red;
+    font-size: 0.85em;
+    margin-top: 5px; /* Add margin between input and error message */
+}
+
+
+.form {
     position: absolute;
-    max-width: 430px;
+    max-width: 500px;
     width: 100%;
-    padding: 30px;
+    padding: 20px 50px 20px 50px;
     border-radius: 6px;
     background: #FFF;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add this line for shadow */
 }
 
 header{
@@ -70,12 +91,10 @@ header{
     color: #232836;
     text-align: center;
 }
-form{
-    margin-top: 30px;
-}
+
 .form .field{
     position: relative;
-    height: 50px;
+    height: 40px;
     width: 100%;
     margin-top: 20px;
     border-radius: 6px;
@@ -195,4 +214,47 @@ a.google span{
         padding: 20px 10px;
     }
     
+}
+
+
+/* Base alert class */
+.alert {
+    padding: 15px 20px;
+    /* margin-bottom: 20px; */
+    border: 1px solid transparent;
+    /* border-radius: 4px; */
+    width: 100%;
+    font-size: 16px;
+    line-height: 1.5;
+    /* position: relative; */
+}
+
+/* Danger alert class */
+.alert-danger {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+
+.alert-success {
+    color: #0a0a0ae6;
+    background-color: #61dafb2f;
+    border-color: #ebccd1;
+}
+
+/* Optional close button inside alert */
+.alert .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: inherit;
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.alert .close:hover {
+    opacity: 1;
 }
