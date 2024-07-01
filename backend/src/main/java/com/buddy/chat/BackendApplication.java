@@ -24,8 +24,6 @@ public class BackendApplication implements CommandLineRunner {
 		SpringApplication.run(BackendApplication.class, args);
 	}
 
-
-//
 	@Override
 	public void run(String... args) throws Exception {
 		Role adminRole;
