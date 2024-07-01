@@ -11,6 +11,8 @@ import { REGISTER_POST_ENDPOINT } from '../../constants/auth';
 const Register: React.FC = () => {
     const [serverError, setServerError] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
+    const [profilePicture, setProfilePicture] = useState<File | null>(null);
+
     // Initial form values
     const initialValues = {
         firstName: '',
@@ -24,15 +26,40 @@ const Register: React.FC = () => {
 
     // Handle form submission
     const onSubmit = async (values: any) => {
-        console.log(values); // Replace with your form submission logic
-        const {confirmPassword, ...requestBody} = values;
+        const { confirmPassword, ...requestBody } = values;
+
+        if (profilePicture) {
+            try {
+                const formData = new FormData();
+                formData.append("file", profilePicture);
+                const uploadPreset = process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET;
+
+                if (uploadPreset) {
+                    formData.append("upload_preset", uploadPreset);
+
+                    const response = await axios.post(
+                        `https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUDINARY_CLOUD_NAME}/image/upload`,
+                        formData
+                    );
+
+                    requestBody.profilePicture = response.data.secure_url;
+                } else {
+                    throw new Error('Cloudinary upload preset is not defined');
+                }
+            } catch (error: any) {
+                setServerError('Failed to upload profile picture. Please try again.');
+                return;
+            }
+        }
+
         try {
+            console.log(requestBody)
             const response = await axios.post(REGISTER_POST_ENDPOINT, requestBody);
-            if (response.status == 201) { // CREATED
-                setSuccessMessage('Please check email to verify your account');
+            if (response.status === 201) { // CREATED
+                setSuccessMessage('Please check your email to verify your account');
             }   
 
-        } catch(error: any) {
+        } catch (error: any) {
             if (error.response && error.response.data && error.response.data.message) {
                 setServerError(error.response.data.message);
             } else {
@@ -51,7 +78,7 @@ const Register: React.FC = () => {
                         validationSchema={validationSchema}
                         onSubmit={onSubmit}
                     >
-                        {({ isSubmitting }) => (
+                        {({ isSubmitting, setFieldValue }) => (
                             <Form className="custom-form">
                                 {serverError && <div className="alert alert-danger">{serverError}</div>}
                                 {successMessage && <div className="alert alert-success">{successMessage}</div>}
@@ -80,12 +107,24 @@ const Register: React.FC = () => {
                                     <ErrorMessage name="confirmPassword" component="div" className="error" />
                                 </div>
                                 <div className="field input-field">
-                                    <Field type="text" name="profilePicture" placeholder="Profile picture" className="input" />
+                                    <input 
+                                        type="file" 
+                                        placeholder="Profile picture" 
+                                        className="input" 
+                                        onChange={(event) => {
+                                            const files = event.currentTarget.files;
+                                            if (files && files.length > 0) {
+                                                const file = files[0];
+                                                setFieldValue("profilePicture", file);
+                                                setProfilePicture(file);
+                                            }
+                                        }}  
+                                    />
                                     <ErrorMessage name="profilePicture" component="div" className="error" />
                                 </div>
                                 <div className="field button-field">
                                     <button type="submit" disabled={isSubmitting} className={`btn ${isSubmitting ? 'disabled' : ''}`}>
-                                        {isSubmitting ? 'Register up...' : 'Signup'}
+                                        {isSubmitting ? 'Registering...' : 'Signup'}
                                     </button>
                                 </div>
                             </Form>
@@ -93,10 +132,8 @@ const Register: React.FC = () => {
                     </Formik>
                     <div className="form-link">
                         <span>Already have an account? <a href="/login" className="link login-link">Login</a></span>
-                        
                     </div>
                 </div>
-                
             </div>
         </section>
     );
