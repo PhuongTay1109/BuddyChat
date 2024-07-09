@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.buddy.chat.dto.response.ResponseDTO;
+import com.buddy.chat.dto.response.ApiResponse;
 import com.buddy.chat.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -22,8 +22,8 @@ public class UserControllerV1 {
     private final UserService userService;
     
     @GetMapping()
-    public ResponseEntity<ResponseDTO> getUserList() {
-    	ResponseDTO resp = ResponseDTO.builder()
+    public ResponseEntity<ApiResponse> getUserList() {
+    	ApiResponse resp = ApiResponse.builder()
     			.timestamp(LocalDateTime.now())
     			.message("Get users list successfully")
     			.statusCode(HttpStatus.OK.value())
@@ -34,8 +34,8 @@ public class UserControllerV1 {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<ResponseDTO> getUserByUserId(@PathVariable Integer userId) {
-    	ResponseDTO resp = ResponseDTO.builder()
+    public ResponseEntity<ApiResponse> getUserByUserId(@PathVariable Integer userId) {
+    	ApiResponse resp = ApiResponse.builder()
     			.timestamp(LocalDateTime.now())
     			.message("Get user successfully")
     			.statusCode(HttpStatus.OK.value())

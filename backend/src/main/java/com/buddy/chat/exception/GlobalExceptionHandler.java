@@ -9,15 +9,15 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.buddy.chat.dto.response.ResponseDTO;
+import com.buddy.chat.dto.response.ApiResponse;
 
 import jakarta.validation.ConstraintViolationException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 	@ExceptionHandler(Exception.class)
-	public ResponseEntity<ResponseDTO> handleUnwantedException(Exception e) {
-		ResponseDTO resp = ResponseDTO.builder()
+	public ResponseEntity<ApiResponse> handleUnwantedException(Exception e) {
+		ApiResponse resp = ApiResponse.builder()
 				.timestamp(LocalDateTime.now())
 				.message(e.getMessage())
 				.statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
@@ -27,9 +27,9 @@ public class GlobalExceptionHandler {
 	}
 
 	@ExceptionHandler(AppException.class)
-	public ResponseEntity<ResponseDTO> handleAppException(AppException e) {
+	public ResponseEntity<ApiResponse> handleAppException(AppException e) {
 		HttpStatus httpStatus = e.getHttpStatus();
-		ResponseDTO resp = ResponseDTO.builder()
+		ApiResponse resp = ApiResponse.builder()
 				.timestamp(LocalDateTime.now())
 				.message(e.getMessage())
 				.statusCode(httpStatus.value())
@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler({ ConstraintViolationException.class, MissingServletRequestParameterException.class,
 			MethodArgumentNotValidException.class })
-	public ResponseEntity<ResponseDTO> handleValidationException(Exception e) {
+	public ResponseEntity<ApiResponse> handleValidationException(Exception e) {
 
 		String message = e.getMessage();
 
@@ -50,7 +50,7 @@ public class GlobalExceptionHandler {
 			message = message.substring(start, end);
 		}
 
-		ResponseDTO resp = ResponseDTO.builder()
+		ApiResponse resp = ApiResponse.builder()
 				.timestamp(LocalDateTime.now())
 				.message(message)
 				.statusCode(HttpStatus.BAD_REQUEST.value()).build();

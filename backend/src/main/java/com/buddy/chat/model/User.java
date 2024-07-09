@@ -10,7 +10,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.mongodb.lang.NonNull;
+import com.buddy.chat.enums.Provider;
+import com.buddy.chat.enums.Status;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -20,33 +21,28 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class User extends AbstractEntity implements UserDetails  {
-    @Transient //this field is not persisted in the database
+public class User implements UserDetails  {
+    private static final long serialVersionUID = 1L;
+
+	@Transient //this field is not persisted in the database
     public static final String SEQUENCE_NAME = "users_sequence";
 
     @Id
     private Integer userId;
 
-    @NonNull // For constructor
     private String username;
-    @NonNull // For constructor
     private String password;
-    @NonNull // For constructor
     private String email;
-    @NonNull
     private String firstName;
-    @NonNull
     private String lastName;
-    @NonNull
     private String profilePicture;
-    @NonNull
     private Boolean isEnabled;
+    private Provider provider;
 
     private Status status;
     
 
     @DBRef
-    @NonNull // For constructor
     private Set<Role> roles;
 
     @Override

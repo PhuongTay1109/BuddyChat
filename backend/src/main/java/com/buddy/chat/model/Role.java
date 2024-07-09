@@ -15,7 +15,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor // Add @NonNull
 public class Role implements GrantedAuthority {
 
-    @Transient //this field is not persisted in the database
+    private static final long serialVersionUID = 1L;
+
+	@Transient //this field is not persisted in the database
     public static final String SEQUENCE_NAME = "roles_sequence";
 
     @Id

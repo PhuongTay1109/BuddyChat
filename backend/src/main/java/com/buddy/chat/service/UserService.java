@@ -7,22 +7,25 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import com.buddy.chat.dto.request.UserRegistrationDTO;
-import com.buddy.chat.dto.response.UserResponseDTO;
+import com.buddy.chat.dto.request.UserLoginRequest;
+import com.buddy.chat.dto.request.UserRegistrationRequest;
+import com.buddy.chat.dto.response.UserLoginResponse;
+import com.buddy.chat.dto.response.UserResponse;
 
 import jakarta.mail.MessagingException;
 
-
 public interface UserService extends UserDetailsService {
 
-    public List<UserResponseDTO> findAllUsers();
-    public UserResponseDTO findUserByUserId(Integer userId);
-    
-    public UserResponseDTO register(UserRegistrationDTO request) throws UnsupportedEncodingException, MessagingException;
+    public List<UserResponse> findAllUsers();
+    public UserResponse findUserByUserId(Integer userId);
+
+    public UserLoginResponse login(UserLoginRequest request);
+    public UserLoginResponse googleLogin(String accessToken);
+    public UserResponse register(UserRegistrationRequest request) throws UnsupportedEncodingException, MessagingException;
 
     @Override
     default UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'loadUserByUsername'");
     }
+
 }

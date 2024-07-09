@@ -11,7 +11,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.buddy.chat.filter.JwtFilter;
 
 @Configuration
-public class SpringSecurityConfig {
+public class SecurityConfig {
 	
     @Autowired
     JwtFilter jwtFilter;

@@ -9,4 +9,5 @@ import com.buddy.chat.model.RefreshToken;
 public interface RefreshTokenRepository extends MongoRepository<RefreshToken, String> {
     RefreshToken findByUsername(String username);
     RefreshToken findByToken(String token);
+    void deleteByUsername(String username);
 }

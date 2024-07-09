@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.buddy.chat.dto.request.EmailTokenRequestDTO;
-import com.buddy.chat.dto.response.ResponseDTO;
+import com.buddy.chat.dto.request.EmailTokenRequest;
+import com.buddy.chat.dto.response.ApiResponse;
 import com.buddy.chat.service.EmailVerificationTokenService;
 
 import jakarta.mail.MessagingException;
@@ -24,13 +24,13 @@ public class VerifyControllerV1 {
 	private final EmailVerificationTokenService emailVerificationTokenService;
 
 	@PostMapping("/confirm-account-registration")
-	public ResponseEntity<ResponseDTO> confirmAccountRegistration(@RequestBody EmailTokenRequestDTO tokenDTO) throws UnsupportedEncodingException, MessagingException {
+	public ResponseEntity<ApiResponse> confirmAccountRegistration(@RequestBody EmailTokenRequest tokenDTO) throws UnsupportedEncodingException, MessagingException {
 		
 		boolean isVerified = emailVerificationTokenService.confirmAccountRegistration(tokenDTO.getToken());
 		String message = isVerified ? "Account is confirmed successfully" : "Token expired. A new confirmation email has been sent.";
 		int statusCode = isVerified ? HttpStatus.OK.value() : HttpStatus.ACCEPTED.value();
 
-		ResponseDTO resp = ResponseDTO.builder()
+		ApiResponse resp = ApiResponse.builder()
 				.statusCode(statusCode)
 				.message(message)
 				.build();

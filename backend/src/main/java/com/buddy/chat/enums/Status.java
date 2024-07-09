@@ -1,4 +1,4 @@
-package com.buddy.chat.model;
+package com.buddy.chat.enums;
 
 public enum Status {
     ONLINE,

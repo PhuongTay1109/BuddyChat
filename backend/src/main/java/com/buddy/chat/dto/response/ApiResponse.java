@@ -8,12 +8,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-
 @Setter
 @Getter
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ResponseDTO {
+public class ApiResponse {
 
     LocalDateTime timestamp;
     String message;
