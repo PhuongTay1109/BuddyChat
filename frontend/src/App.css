@@ -1,6 +1,6 @@
-.App {
+/* .App {
   text-align: center;
-}
+} */
 
 .App-logo {
   height: 40vmin;
@@ -65,18 +65,16 @@
 .input-field {
     margin-bottom: 15px; /* Add margin between input fields */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add this line for shadow */
-
 }
 
 .error {
     color: red;
     font-size: 0.85em;
-    margin-top: 5px; /* Add margin between input and error message */
+    margin: 5px 0 5px 0; /* Add margin between input and error message */
 }
 
 
 .form {
-    position: absolute;
     max-width: 500px;
     width: 100%;
     padding: 20px 50px 20px 50px;

@@ -4,14 +4,14 @@ import * as Yup from 'yup';
 import '../../App.css';
 import 'boxicons/css/boxicons.min.css';
 
-import validationSchema from '../../utils/vadliation-schema';
+import { userRegistrationValidation} from '../../utils/vadliation-schema';
 import axios from 'axios';
-import { REGISTER_POST_ENDPOINT } from '../../constants/auth';
+import { REGISTER_POST_ENDPOINT } from '../../constants/api';
+import { DEFAULT_AVA_URL } from '../../constants/app';
 
 const Register: React.FC = () => {
     const [serverError, setServerError] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
-    const [profilePicture, setProfilePicture] = useState<File | null>(null);
 
     // Initial form values
     const initialValues = {
@@ -20,53 +20,38 @@ const Register: React.FC = () => {
         email: '',
         username: '',
         password: '',
+        provider: '',
         profilePicture: '',
         confirmPassword: '',
     };
 
     // Handle form submission
-    const onSubmit = async (values: any) => {
+    const handleSubmit = async (values: any) => {
+        console.log("sign up")
         const { confirmPassword, ...requestBody } = values;
+        requestBody.provider = "LOCAL";
+        requestBody.profilePicture = DEFAULT_AVA_URL;
 
-        if (profilePicture) {
-            try {
-                const formData = new FormData();
-                formData.append("file", profilePicture);
-                const uploadPreset = process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET;
-
-                if (uploadPreset) {
-                    formData.append("upload_preset", uploadPreset);
-
-                    const response = await axios.post(
-                        `https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUDINARY_CLOUD_NAME}/image/upload`,
-                        formData
-                    );
-
-                    requestBody.profilePicture = response.data.secure_url;
-                } else {
-                    throw new Error('Cloudinary upload preset is not defined');
-                }
-            } catch (error: any) {
-                setServerError('Failed to upload profile picture. Please try again.');
-                return;
-            }
-        }
-
+        
         try {
             console.log(requestBody)
             const response = await axios.post(REGISTER_POST_ENDPOINT, requestBody);
             if (response.status === 201) { // CREATED
+                setServerError("");
                 setSuccessMessage('Please check your email to verify your account');
             }   
 
         } catch (error: any) {
+            setSuccessMessage('');
             if (error.response && error.response.data && error.response.data.message) {
                 setServerError(error.response.data.message);
+
             } else {
                 setServerError('An unexpected error occurred. Please try again later.');
             }
         }
     };
+
 
     return (
         <section className="container forms">
@@ -75,10 +60,9 @@ const Register: React.FC = () => {
                     <header>Register</header>
                     <Formik
                         initialValues={initialValues}
-                        validationSchema={validationSchema}
-                        onSubmit={onSubmit}
-                    >
-                        {({ isSubmitting, setFieldValue }) => (
+                        validationSchema={userRegistrationValidation}
+                        onSubmit={handleSubmit}>
+                        {({ isSubmitting }) => (
                             <Form className="custom-form">
                                 {serverError && <div className="alert alert-danger">{serverError}</div>}
                                 {successMessage && <div className="alert alert-success">{successMessage}</div>}
@@ -99,32 +83,16 @@ const Register: React.FC = () => {
                                     <ErrorMessage name="username" component="div" className="error" />
                                 </div>
                                 <div className="field input-field">
-                                    <Field type="password" name="password" placeholder="Create password" className="password" />
+                                    <Field type="password" name="password" placeholder="Create password" className="input" />
                                     <ErrorMessage name="password" component="div" className="error" />
                                 </div>
                                 <div className="field input-field">
                                     <Field type="password" name="confirmPassword" placeholder="Confirm password" className="input" />
                                     <ErrorMessage name="confirmPassword" component="div" className="error" />
                                 </div>
-                                <div className="field input-field">
-                                    <input 
-                                        type="file" 
-                                        placeholder="Profile picture" 
-                                        className="input" 
-                                        onChange={(event) => {
-                                            const files = event.currentTarget.files;
-                                            if (files && files.length > 0) {
-                                                const file = files[0];
-                                                setFieldValue("profilePicture", file);
-                                                setProfilePicture(file);
-                                            }
-                                        }}  
-                                    />
-                                    <ErrorMessage name="profilePicture" component="div" className="error" />
-                                </div>
                                 <div className="field button-field">
                                     <button type="submit" disabled={isSubmitting} className={`btn ${isSubmitting ? 'disabled' : ''}`}>
-                                        {isSubmitting ? 'Registering...' : 'Signup'}
+                                        {isSubmitting ? 'Registering...' : 'Register'}
                                     </button>
                                 </div>
                             </Form>
