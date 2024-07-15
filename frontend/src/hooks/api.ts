@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useAuth } from './auth-provider';
-import { SERVER_BASE_URL } from '../constants/api';
+import { SERVER_BASE_URL } from '../constants/backend-server';
 import Cookies from 'js-cookie';
 
 const useApi = () => {
@@ -30,11 +30,8 @@ const useApi = () => {
       if (error.response.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true;
         try {
-          const response = await axios.post(`${SERVER_BASE_URL}api/v1/auth/refresh-token`, { refreshToken: refreshToken }, { withCredentials: true });
+          const response = await axios.post(`${SERVER_BASE_URL}/api/v1/auth/refresh-token`, { token: refreshToken }, { withCredentials: true });
           if (response.status === 200) {
-            console.log("refesh token now");
-            console.log(response.data)
-            console.log(response.data.data.newAccessToken)
             const newAccessToken = response.data.data.newAccessToken;
             Cookies.set('accessToken', newAccessToken, { path: '/' });
             setAuthState((prevState : any)=> ({
@@ -54,7 +51,6 @@ const useApi = () => {
           });
           Cookies.remove('accessToken');
           Cookies.remove('refreshToken');
-          Cookies.remove('user');
           window.location.href = '/login';
         }
       }

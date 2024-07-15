@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { SERVER_BASE_URL } from "../../constants/api";
+import { SERVER_BASE_URL } from "../../constants/backend-server";
 
 const ConfirmAccount = () => {
     const [responseStatus, setResponseStatus] = useState<number>(404);

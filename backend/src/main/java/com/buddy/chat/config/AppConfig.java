@@ -14,8 +14,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableAsync // For asynchronous service like sending mail
 @Configuration
 public class AppConfig {
-	
-	// CORS config
     @Bean
     WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {

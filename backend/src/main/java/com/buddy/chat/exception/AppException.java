@@ -8,7 +8,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AppException extends RuntimeException {
-    private HttpStatus httpStatus;
+	
+    private static final long serialVersionUID = 1L;
+    
+	private HttpStatus httpStatus;
+	
     public AppException(String message, HttpStatus httpStatus) {
         super(message);
         this.httpStatus = httpStatus;

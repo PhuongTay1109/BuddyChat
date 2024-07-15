@@ -33,13 +33,13 @@ public class UserControllerV1 {
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<ApiResponse> getUserByUserId(@PathVariable Integer userId) {
+    @GetMapping("/{username}")
+    public ResponseEntity<ApiResponse> getUserByUsername(@PathVariable String username) {
     	ApiResponse resp = ApiResponse.builder()
     			.timestamp(LocalDateTime.now())
     			.message("Get user successfully")
     			.statusCode(HttpStatus.OK.value())
-    			.data(userService.findUserByUserId(userId))
+    			.data(userService.loadUserByUsername(username))
     			.build();
 
         return new ResponseEntity<>(resp, HttpStatus.OK); 
