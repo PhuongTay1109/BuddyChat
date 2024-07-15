@@ -39,12 +39,12 @@
             <pre><code>cd BuddyChat</code></pre>
         </li>
         <li><strong>Set up the back-end</strong>:
-            <pre><code>cd backend</code></pre>
-            <pre><code>mvn clean install</code></pre>
+            <pre><code>cd backend
+mvn clean install</code></pre>
         </li>
         <li><strong>Set up the front-end</strong>:
-            <pre><code>cd frontend</code></pre>
-            <pre><code>npm install</code></pre>
+            <pre><code>cd frontend
+npm install</code></pre>
         </li>
     </ol>
    <h2>Configuration</h2>
@@ -53,13 +53,13 @@
         <li><strong>Create an application.properties file in the src/main/resources directory.</strong> </li>
         <li><strong>Add your MongoDB connection details, JWT secret key, and OAuth credentials</strong>:
             <pre><code>
-              spring.data.mongodb.uri=mongodb://localhost:27017/your-db
-              jwt.secret=your-jwt-secret-key
-              jwt.expiration=3600
-              spring.security.oauth2.client.registration.google.client-id=your-google-client-id
-              spring.security.oauth2.client.registration.google.client-secret=your-google-client-secret
-              spring.security.oauth2.client.registration.facebook.client-id=your-facebook-client-id
-              spring.security.oauth2.client.registration.facebook.client-secret=your-facebook-client-secret
+spring.data.mongodb.uri=connection-string
+jwt.secret=your-jwt-secret-key
+jwt.expiration=3600
+spring.security.oauth2.client.registration.google.client-id=your-google-client-id
+spring.security.oauth2.client.registration.google.client-secret=your-google-client-secret
+spring.security.oauth2.client.registration.facebook.client-id=your-facebook-client-id
+spring.security.oauth2.client.registration.facebook.client-secret=your-facebook-client-secret
             </code></pre>
         </li>
     </ol>
