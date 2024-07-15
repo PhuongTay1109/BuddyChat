@@ -17,7 +17,6 @@
         <li>Forget password (send an email link to reset)</li>
         <li>JWT Authentication (Access Token & Refresh Token)</li>
         <li>Real-time chat using WebSocket</li>
-        <li>Checkout and payment processing (online payment with VNPay)</li>
         <li>MongoDB for data persistence</li>
         <li>ReactJS for the front-end</li>
     </ul>
