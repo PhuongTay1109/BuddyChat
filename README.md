@@ -54,16 +54,12 @@
         <li><strong>Add your MongoDB connection details, JWT secret key, and OAuth credentials</strong>:
             <pre><code>
               spring.data.mongodb.uri=mongodb://localhost:27017/your-db
-
               jwt.secret=your-jwt-secret-key
               jwt.expiration=3600
-              
               spring.security.oauth2.client.registration.google.client-id=your-google-client-id
               spring.security.oauth2.client.registration.google.client-secret=your-google-client-secret
-              
               spring.security.oauth2.client.registration.facebook.client-id=your-facebook-client-id
               spring.security.oauth2.client.registration.facebook.client-secret=your-facebook-client-secret
-
             </code></pre>
         </li>
     </ol>
