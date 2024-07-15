@@ -55,7 +55,6 @@ npm install</code></pre>
             <pre><code>
 spring.data.mongodb.uri=connection-string
 jwt.secret=your-jwt-secret-key
-jwt.expiration=3600
 spring.security.oauth2.client.registration.google.client-id=your-google-client-id
 spring.security.oauth2.client.registration.google.client-secret=your-google-client-secret
 spring.security.oauth2.client.registration.facebook.client-id=your-facebook-client-id
