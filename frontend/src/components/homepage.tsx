@@ -1,10 +1,12 @@
+import { jwtDecode } from "jwt-decode";
 import { useAuth } from "../hooks/auth-provider";
 import UserRoutes from "./user/user-routes";
 
 const Homepage = () => {
     const auth = useAuth();
-    const roles: string[] = auth.roles.map((role: any) => role.authority);
-    console.log(roles)
+    const dedcoded: any = jwtDecode(auth.accessToken);
+    const roles: any[] = [];
+    roles.push(dedcoded?.roles);
     if (roles.includes("ROLE_USER")){
         return <UserRoutes/>
     }

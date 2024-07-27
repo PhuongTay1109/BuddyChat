@@ -7,8 +7,9 @@ import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { SERVER_BASE_URL } from '../../constants/backend-server';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import FacebookLogin from '@greatsumini/react-facebook-login';
+import Header from '../header';
 const facebookClientId = process.env.REACT_APP_FACEBOOK_CLIENT_ID || '';
 
 
@@ -24,14 +25,14 @@ const Login: React.FC = () => {
 
     const auth = useAuth();
 
-    const initialValues: LoginFormValues = {
+    const initialValues = {
         username: '',
         password: ''
     };
 
-    const localLogin = async (values: LoginFormValues) => {
+    const localLogin = async (values: any) => {
         try {
-            const msg = await auth.login(values);
+            const msg: any = await auth.login(values);
             setMessage(msg);
         } catch (err) {
             throw err;
@@ -40,26 +41,23 @@ const Login: React.FC = () => {
 
     const googleLogin = useGoogleLogin({
         onSuccess: async (response) => {
-            console.log(response)
+            // console.log(response)
             const { access_token } = response;
-            console.log(access_token)
+            // console.log(access_token)
 
             try {
                 const response = await axios.post(`${SERVER_BASE_URL}/api/v1/auth/google-login`, { token: access_token })
-                if (response.status == 200) {
-                    console.log(response)
+                if (response.status === 200) {
+                    // console.log(response)
                     const accessToken = response.data.data.accessToken;
                     const refreshToken = response.data.data.refreshToken;
-                    const roles = response.data.data.roles;
                     Cookies.set('accessToken', accessToken, { path: '/', secure: true });
                     Cookies.set('refreshToken', refreshToken, { path: '/', secure: true });
-                    localStorage.setItem("roles", JSON.stringify(roles));
 
 
 
                     auth.setAuthState((prevState: any) => ({
                         ...prevState,
-                        roles,
                         isAuthenticated: true,
                         accessToken,
                         refreshToken,
@@ -75,22 +73,19 @@ const Login: React.FC = () => {
 
     })
     const facebookLogin = async (response: any) => {
-        console.log("response ", response)
+        // console.log("response ", response)
         if (response.accessToken) {
             try {
                 const res = await axios.post(`${SERVER_BASE_URL}/api/v1/auth/facebook-login`, { token: response.accessToken });
                 if (res.status === 200) {
                     const accessToken = res.data.data.accessToken;
                     const refreshToken = res.data.data.refreshToken;
-                    const roles = response.data.data.roles;
                     Cookies.set('accessToken', accessToken, { path: '/', secure: true });
                     Cookies.set('refreshToken', refreshToken, { path: '/', secure: true });
-                    localStorage.setItem("roles", JSON.stringify(roles));
 
 
                     auth.setAuthState((prevState: any) => ({
                         ...prevState,
-                        roles,
                         isAuthenticated: true,
                         accessToken,
                         refreshToken,
@@ -103,13 +98,16 @@ const Login: React.FC = () => {
         }
     }
 
-    return (
-        <section style={{ height: '100vh' }} className="app-background container">
-            <div className="row  justify-content-center">
+    return (<>
+        <section style={{height: '100vh', width: '150vh', padding: "100px"}} className="app-background container">
+            <div className="row justify-content-center">
                 <div className="col-md-6">
                     <div className="card m-auto" >
-                        <div className="card-body ">
-                            <h5 className="card-title text-center mb-4">Login</h5>
+                        <div style={{padding: "40px"}} className="card-body ">
+                        <h1 style={{ fontFamily: 'Billabong' }} className="card-title text-center mb-2">
+                            <Link to="/login" className="text-decoration-none text-black">Simple Blog</Link>                
+                        </h1>
+                        <h5 style={{ fontFamily: 'Billabong' }} className="card-title text-center mb-4">Login</h5>
                             <Formik
                                 initialValues={initialValues}
                                 validationSchema={userLoginValidation}
@@ -135,12 +133,12 @@ const Login: React.FC = () => {
                                             </button>
                                         </div>
                                         <div className="mb-1">
-                                            <a href="#" className="forgot-pass">Forgot password?</a>
+                                            <a href="/forgot-password" className="forgot-pass text-decoration-none">Forgot password?</a>
                                         </div>
                                     </Form>
                                 )}
                             </Formik>
-                            <div className="d-flex flex-column justify-content-between align-items-center">
+                            <div className="d-flex flex-column justify-content-between align-items-center mt-1">
                                 <FacebookLogin
                                     appId={facebookClientId}
                                     scope='email,public_profile'
@@ -148,26 +146,27 @@ const Login: React.FC = () => {
                                     fields='email'
                                     onFail={(error) => console.error('Facebook login error:', error)}
                                     render={({ onClick }) => (
-                                        <button onClick={onClick} style={{ cursor: 'pointer' }} className="mb-1 w-100 btn btn-primary">
+                                        <button onClick={onClick} style={{ cursor: 'pointer', marginTop: '10px'}} className="mb-1 w-100 btn btn-primary">
                                             <img src="https://www.logo.wine/a/logo/Facebook/Facebook-f_Logo-White-Dark-Background-Logo.wine.svg" style={{ width: '24px', height: '24px' }} alt="Facebook Icon" className="me-2" />
                                             Login with Facebook
                                         </button>
                                     )}
                                 />
-                                <button onClick={() => googleLogin()} style={{ cursor: 'pointer' }} className="w-100 btn btn-danger">
+                                <button onClick={() => googleLogin()} style={{ cursor: 'pointer', marginTop: '5px' }} className="w-100 btn btn-danger">
                                     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1024px-Google_%22G%22_logo.svg.png" style={{ width: '24px', height: '24px' }} alt="Google Icon" className="me-2" />
                                     Login with Google
                                 </button>
                             </div>
 
                             <div className="mt-3 text-center">
-                                <span>Don't have an account? <a href="/register">Register</a></span>
+                                <span>Don't have an account? <a href="/register" className='text-decoration-none'>Register</a></span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
+    </>
     );
 }
 

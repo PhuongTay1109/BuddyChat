@@ -4,6 +4,7 @@ import { userRegistrationValidation } from '../../utils/vadliation-schema';
 import axios from 'axios';
 import { REGISTER_POST_ENDPOINT } from '../../constants/backend-server';
 import { DEFAULT_AVA_URL } from '../../constants/app';
+import { Link } from 'react-router-dom';
 
 const Register: React.FC = () => {
     const [serverError, setServerError] = useState<string | null>(null);
@@ -50,12 +51,15 @@ const Register: React.FC = () => {
 
 
     return (
-        <section style={{ height: '100vh' }} className="app-background container">
+        <section style={{height: '100vh', width: '150vh', padding: "100px"}} className="app-background container">
             <div className="row  justify-content-center">
                 <div className="col-md-6">
                     <div className="card" >
                         <div className="card-body ">
-                            <h5 className='card-title text-center mb-4'>Register</h5>
+                        <h1 style={{ fontFamily: 'Billabong' }} className="card-title text-center mb-2">
+                            <Link to="/login" className="text-decoration-none text-black">Simple Blog</Link>                
+                        </h1>
+                        <h5 style={{ fontFamily: 'Billabong' }} className="card-title text-center mb-4">Register</h5>
                             <Formik
                                 initialValues={initialValues}
                                 validationSchema={userRegistrationValidation}
@@ -98,7 +102,7 @@ const Register: React.FC = () => {
                                 )}
                             </Formik>
                             <div className="mt-3 text-center form-link">
-                                <span>Already have an account? <a href="/login" className="link login-link">Login</a></span>
+                                <span>Already have an account? <a href="/login" className="link login-link text-decoration-none">Login</a></span>
                             </div>
                         </div>
                     </div>

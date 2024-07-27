@@ -14,17 +14,12 @@ const getRefreshToken = () => {
     const refreshToken = Cookies.get('refreshToken') || null;
     return refreshToken;
 };
-const getRoles = () => {
-    const roles = localStorage.getItem("roles");
-    const rolesJson = roles ? JSON.parse(roles) : null;
-    return rolesJson;
-};
+
 
 const authStateInit = {
     isAuthenticated: !!getAccessToken(),
     accessToken: getAccessToken(),
     refreshToken: getRefreshToken(),
-    roles: getRoles(),
     login: async (input: object) => Promise<any>,
     logout: () => { },
     setAuthState: (state: any) => { }
@@ -65,7 +60,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                     isAuthenticated: true,
                     accessToken,
                     refreshToken,
-                    roles,
                     login,
                     logout,
                     setAuthState
@@ -100,7 +94,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                     isAuthenticated: false,
                     accessToken: null,
                     refreshToken: null,
-                    roles: null,
                     login,
                     logout,
                     setAuthState

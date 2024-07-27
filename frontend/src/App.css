@@ -1,6 +1,9 @@
 /* .App {
   text-align: center;
 } */
+ :root {
+  --header-length: 74px;
+ }
 
 .App-logo {
   height: 40vmin;
@@ -13,6 +16,8 @@
   }
 }
 
+
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -24,8 +29,19 @@
   color: white;
 }
 
+#main {
+  margin-top: var(--header-length) !important;
+  min-height: 80vh;
+}
+
+
 .App-link {
   color: #61dafb;
+}
+
+.navbar-brand-name {
+  font-family: 'Billabong', cursive !important;
+  font-size: 2rem !important;
 }
 
 @keyframes App-logo-spin {
@@ -35,4 +51,23 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+
+/* Profile */
+.profile-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+.profile-header img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+.profile-header h2 {
+  margin-top: 10px;
+}
+.profile-form {
+  max-width: 600px;
+  margin: 0 auto;
 }
