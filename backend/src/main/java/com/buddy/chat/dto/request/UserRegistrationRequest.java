@@ -1,7 +1,8 @@
 package com.buddy.chat.dto.request;
 
 import com.buddy.chat.enums.Provider;
-import com.buddy.chat.util.validator.EnumValue;
+import com.buddy.chat.model.User;
+import com.buddy.chat.validator.EnumValue;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -21,12 +22,12 @@ public class UserRegistrationRequest {
 
     @NotBlank(message =  "First name must be not blank!")
     @NotNull
-    @Pattern(regexp = "([A-Z][a-z]*)", message = "First letter  of first name must be capitalized!")
+    @Pattern(regexp = User.VIETNAMESE_NAME_REGEX, message = "First letter  of first name must be capitalized!")
     private String firstName;
     
     @NotBlank(message =  "Last name must be not blank!")
     @NotNull
-    @Pattern(regexp = "([A-Z][a-z]*)", message = "First letter of last name must be capitalized!")
+    @Pattern(regexp = User.VIETNAMESE_NAME_REGEX, message = "First letter of last name must be capitalized!")
     private String lastName;
 
     @NotNull

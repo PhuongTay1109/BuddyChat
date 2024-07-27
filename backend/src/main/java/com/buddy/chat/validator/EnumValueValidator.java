@@ -1,4 +1,4 @@
-package com.buddy.chat.util.validator;
+package com.buddy.chat.validator;
 
 
 import java.util.Arrays;

@@ -25,7 +25,7 @@ public class VerificationControllerV1 {
 	@PostMapping("/account-registration")
 	public ResponseEntity<ApiResponse> confirmAccountRegistration(@Valid @RequestBody EmailTokenRequest tokenDTO) {
 		boolean isVerified = emailVerificationTokenService.confirmAccountRegistration(tokenDTO.getToken());
-		String message = isVerified ? "Account is confirmed successfully" : "Token expired. A new confirmation email has been sent.";
+		String message = isVerified ? "Account is confirmed successfully" : "Reset password link is expired. A new confirmation email has been sent.";
 		int statusCode = isVerified ? HttpStatus.OK.value() : HttpStatus.ACCEPTED.value();
 
 		ApiResponse response = ApiResponse.builder()
@@ -49,4 +49,3 @@ public class VerificationControllerV1 {
 	}
 
 }
-	

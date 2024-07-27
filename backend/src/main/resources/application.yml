@@ -3,6 +3,13 @@ email:
   password: mlfoeesojdrbhbez
 jwt:
   secret: 843567893696976453275974432697R634976R738467TR678T34865R6834R8763T478378637664538745673865783678548735687R3
+cloudinary:
+  cloud-name: dj1h07rea
+  api-key: 854269645733317
+  api-secret: BDjF4Xe77SeLhGROvkvZkwAi928
+app:
+  google:
+    client_id: 1011383604442-790l3f5c40eksnfek6pp9mfk4scjg17n.apps.googleusercontent.com
   
 spring:
   application:
@@ -11,6 +18,7 @@ spring:
     mongodb:
       uri: mongodb+srv://tayphuong1109:PhuongTay110903%40@javaphuongtay.qkqk0o3.mongodb.net/?retryWrites=true&w=majority&appName=JavaPhuongTay
       database: buddy_chat
+
 # springdoc:
 #   api-docs:
 #     enabled: true
