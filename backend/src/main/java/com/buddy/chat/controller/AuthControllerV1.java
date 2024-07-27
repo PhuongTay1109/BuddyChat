@@ -22,26 +22,27 @@ import com.buddy.chat.dto.response.UserLoginResponse;
 import com.buddy.chat.dto.response.UserResponse;
 import com.buddy.chat.mapper.UserMapper;
 import com.buddy.chat.model.User;
+import com.buddy.chat.service.AuthenticationService;
 import com.buddy.chat.service.EmailVerificationTokenService;
 import com.buddy.chat.service.RefreshTokenService;
-import com.buddy.chat.service.UserService;
 
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
 
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthControllerV1 {
 	
-	private final UserService userService;
 	private final RefreshTokenService refreshTokenService;
 	private final EmailVerificationTokenService emailService;
+	private final AuthenticationService authenticationService;
 	
 	@PostMapping("/register") 
 	public ResponseEntity<ApiResponse> register(@Valid @RequestBody UserRegistrationRequest requestBody) throws UnsupportedEncodingException, MessagingException {
-		UserResponse registeredUser = UserMapper.toUserResponse(userService.register(requestBody));
+		UserResponse registeredUser = UserMapper.toUserResponse( authenticationService.register(requestBody));
 		System.out.println(registeredUser.toString());
     	ApiResponse respponse = ApiResponse.builder()
     			.timestamp(LocalDateTime.now())
@@ -56,7 +57,7 @@ public class AuthControllerV1 {
 	
 	@PostMapping("/login")
 	public ResponseEntity<ApiResponse> login(@Valid @RequestBody UserLoginRequest requestBody) {
-		UserLoginResponse userLoginResponse = userService.login(requestBody);
+		UserLoginResponse userLoginResponse =  authenticationService.login(requestBody);
 
 		ApiResponse respponse = ApiResponse.builder()
     			.timestamp(LocalDateTime.now())
@@ -69,7 +70,7 @@ public class AuthControllerV1 {
 
 	@DeleteMapping("/logout")
 	public ResponseEntity<ApiResponse> logout(@Valid @RequestBody UserLogoutRequest requestBody) {
-		userService.logout(requestBody);
+		 authenticationService.logout(requestBody);
 
 		ApiResponse respponse = ApiResponse.builder()
     			.timestamp(LocalDateTime.now())
@@ -77,13 +78,13 @@ public class AuthControllerV1 {
     			.statusCode(HttpStatus.NO_CONTENT.value())
     			.data(null)
     			.build();
-        return new ResponseEntity<>(respponse, HttpStatus.NO_CONTENT); 
+        return new ResponseEntity<>(respponse, HttpStatus.OK); 
 	}
 
 	@PostMapping("/google-login")
 	public ResponseEntity<ApiResponse> GoogleLogin(@Valid @RequestBody OAuthTokenRequest requestBody) {
 		// 
-		UserLoginResponse userLoginResponse = userService.GoogleLogin(requestBody.getToken());
+		UserLoginResponse userLoginResponse =  authenticationService.GoogleLogin(requestBody.getToken());
 		ApiResponse respponse = ApiResponse.builder()
     			.timestamp(LocalDateTime.now())
     			.message("User is authenticated")
@@ -95,7 +96,7 @@ public class AuthControllerV1 {
 	}
 	@PostMapping("/facebook-login")
 	public ResponseEntity<ApiResponse> FacebookLogin(@Valid @RequestBody OAuthTokenRequest requestBody) {
-		UserLoginResponse userLoginResponse = userService.FacebookLogin(requestBody.getToken());
+		UserLoginResponse userLoginResponse =  authenticationService.FacebookLogin(requestBody.getToken());
 		ApiResponse respponse = ApiResponse.builder()
     			.timestamp(LocalDateTime.now())
     			.message("User is authenticated")

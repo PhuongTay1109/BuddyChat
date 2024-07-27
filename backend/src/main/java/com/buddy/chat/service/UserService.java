@@ -23,12 +23,6 @@ public interface UserService extends UserDetailsService {
 	    public User updateUser(Integer userId, UserUpdateRequest userCreationRequest);
 	    public void deleteUserById(Integer userId);
 	    public List<User> searchUsers(String query);
-	 
-	    public UserLoginResponse login(UserLoginRequest request);
-	    public void logout(UserLogoutRequest request);
-	    public UserLoginResponse GoogleLogin(String accessToken);
-	    public UserLoginResponse FacebookLogin(String accessToken);
-	    public User register(UserRegistrationRequest request) throws UnsupportedEncodingException, MessagingException;
 
 	    @Override
 	    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
