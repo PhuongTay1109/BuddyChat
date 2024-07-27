@@ -83,7 +83,6 @@ public class EmailVerificationTokenServiceImpl implements EmailVerificationToken
 	public boolean confirmAccountRegistration(String token) {
 
 		EmailVerificationToken emailToken = emailVerificationTokenRepository.findByToken(token);
-		System.out.println("emailToken " + emailToken);
 
 		if (emailToken == null) {
 			throw new AppException("Email token not found", HttpStatus.NOT_FOUND);
@@ -112,12 +111,9 @@ public class EmailVerificationTokenServiceImpl implements EmailVerificationToken
 		}
 	}
 
-	@Async
 	@Override
-	public CompletableFuture<Void> sendPasswordResetEmail(String username) {
-		String token = UUID.randomUUID().toString();
-		
-		User user = userRepository.findByUsername(username);
+	public User checkPasswordResetEmail(String email) {
+		User user = userRepository.findByEmail(email);
 		if (user == null) {
 			throw new AppException("User not found", HttpStatus.NOT_FOUND);
 		}
@@ -125,10 +121,19 @@ public class EmailVerificationTokenServiceImpl implements EmailVerificationToken
 		if(user.getProvider() == Provider.FACEBOOK || user.getProvider() == Provider.GOOGLE) {
 			throw new AppException("You have logged in Simple Blog with FACEBOOK or GOOGLE", HttpStatus.NOT_FOUND);
 		}
+		
+		return user;
+	}
 
+	@Async
+	@Override
+	public CompletableFuture<Void> sendPasswordResetEmail(User user) {
+		
+		String token = UUID.randomUUID().toString();
+		
 		EmailVerificationToken emailVerificationToken = new EmailVerificationToken(user.getEmail(), token);
 		emailVerificationTokenRepository.save(emailVerificationToken);
-
+		
 		MimeMessage message = javaMailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);
 
@@ -156,17 +161,16 @@ public class EmailVerificationTokenServiceImpl implements EmailVerificationToken
 		javaMailSender.send(message);
 		return CompletableFuture.completedFuture(null);
 	}
-
+	
 	@Override
 	public boolean resetPassword(String token, String password) {
 
 		EmailVerificationToken emailToken = emailVerificationTokenRepository.findByToken(token);
-		System.out.println("emailToken " + emailToken);
-
+		
 		if (emailToken == null) {
-			throw new AppException("Email token not found", HttpStatus.NOT_FOUND);
+			throw new AppException("Reset password link is not valid", HttpStatus.GONE);
 		}
-
+		
 		User user = userRepository.findByEmail(emailToken.getUserEmail());
 		if (user == null) {
 			throw new AppException("User not found", HttpStatus.NOT_FOUND);
@@ -185,7 +189,7 @@ public class EmailVerificationTokenServiceImpl implements EmailVerificationToken
 			// delete old token
 			emailVerificationTokenRepository.deleteByUserEmail(user.getEmail());
 			// send new email
-			sendPasswordResetEmail(user.getUsername());
+			sendPasswordResetEmail(user);
 			return false;
 		}
 	}

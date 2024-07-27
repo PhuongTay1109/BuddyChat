@@ -20,6 +20,8 @@ import com.buddy.chat.dto.request.UserRegistrationRequest;
 import com.buddy.chat.dto.response.ApiResponse;
 import com.buddy.chat.dto.response.UserLoginResponse;
 import com.buddy.chat.dto.response.UserResponse;
+import com.buddy.chat.mapper.UserMapper;
+import com.buddy.chat.model.User;
 import com.buddy.chat.service.EmailVerificationTokenService;
 import com.buddy.chat.service.RefreshTokenService;
 import com.buddy.chat.service.UserService;
@@ -39,7 +41,8 @@ public class AuthControllerV1 {
 	
 	@PostMapping("/register") 
 	public ResponseEntity<ApiResponse> register(@Valid @RequestBody UserRegistrationRequest requestBody) throws UnsupportedEncodingException, MessagingException {
-		UserResponse registeredUser = userService.register(requestBody);
+		UserResponse registeredUser = UserMapper.toUserResponse(userService.register(requestBody));
+		System.out.println(registeredUser.toString());
     	ApiResponse respponse = ApiResponse.builder()
     			.timestamp(LocalDateTime.now())
     			.message("User created successfully")
@@ -116,9 +119,11 @@ public class AuthControllerV1 {
 	}
 	
 	@PostMapping("/forgot-password")
-	public ResponseEntity<ApiResponse> sendPasswordResetEmail(@RequestParam String username) {
+	public ResponseEntity<ApiResponse> sendPasswordResetEmail(@RequestParam String email) {
+		
+		User user = emailService.checkPasswordResetEmail(email);
 
-		emailService.sendPasswordResetEmail(username);
+		emailService.sendPasswordResetEmail(user);
 
         ApiResponse response = ApiResponse.builder()
                 .timestamp(LocalDateTime.now())
@@ -127,6 +132,7 @@ public class AuthControllerV1 {
                 .build();
         
         return new ResponseEntity<>(response, HttpStatus.OK);
-	}	
+	}
+	
 
 }
