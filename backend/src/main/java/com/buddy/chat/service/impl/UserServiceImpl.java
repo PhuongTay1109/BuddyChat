@@ -5,7 +5,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -23,13 +22,13 @@ import org.springframework.web.client.RestTemplate;
 import com.buddy.chat.dto.request.UserLoginRequest;
 import com.buddy.chat.dto.request.UserLogoutRequest;
 import com.buddy.chat.dto.request.UserRegistrationRequest;
+import com.buddy.chat.dto.request.UserUpdateRequest;
 import com.buddy.chat.dto.response.FacebookUserInfoResponse;
 import com.buddy.chat.dto.response.GoogleUserInfoResponse;
 import com.buddy.chat.dto.response.UserLoginResponse;
-import com.buddy.chat.dto.response.UserResponse;
 import com.buddy.chat.enums.Provider;
+import com.buddy.chat.enums.Status;
 import com.buddy.chat.exception.AppException;
-import com.buddy.chat.mapper.UserMapper;
 import com.buddy.chat.model.RefreshToken;
 import com.buddy.chat.model.Role;
 import com.buddy.chat.model.User;
@@ -46,21 +45,18 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-	
+
 	private final JwtUtil jwtUtil;
 	private final RefreshTokenRepository refreshTokenRepository;
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final RoleRepository roleRepository;
-	private final UserMapper userMapper;
 	private final EmailVerificationTokenService emailVerificationTokenService;
 
 	@Override
-	public List<UserResponse> findAllUsers() {
+	public List<User> findAllUsers() {
 		List<User> usersList = userRepository.findAll();
-		return usersList.stream()
-				.map(user -> userMapper.toUserResponse(user))
-				.collect(Collectors.toList());
+		return usersList;
 	}
 
 	@Override
@@ -73,16 +69,16 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserResponse findUserByUserId(Integer userId) {
+	public User findUserByUserId(Integer userId) {
 		User user = userRepository.findByUserId(userId);
 		if (user == null) {
 			throw new AppException("User not found with id: " + userId, HttpStatus.NOT_FOUND);
 		}
-		return userMapper.toUserResponse(user);
+		return user;
 	}
 
 	@Override
-	public UserResponse register(UserRegistrationRequest request)
+	public User register(UserRegistrationRequest request)
 			throws UnsupportedEncodingException, MessagingException {
 
 		if (userRepository.existsByUsername(request.getUsername())) {
@@ -114,7 +110,7 @@ public class UserServiceImpl implements UserService {
 
 		emailVerificationTokenService.sendEmailConfirmation(request.getEmail());
 
-		return userMapper.toUserResponse(user);
+		return user;
 	}
 
 	private UserLoginResponse getUserLoginResponse(User user) {
@@ -134,6 +130,7 @@ public class UserServiceImpl implements UserService {
 				.refreshToken(refreshToken)
 				.roles(user.getRoles())
 				.build();
+		
 		return userLoginResponse;
 	}
 
@@ -150,6 +147,9 @@ public class UserServiceImpl implements UserService {
 		if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
 			throw new AppException("Invalid username or password", HttpStatus.UNAUTHORIZED);
 		}
+		
+		user.setStatus(Status.ONLINE);
+		
 		return getUserLoginResponse(user);
 	}
 
@@ -190,6 +190,7 @@ public class UserServiceImpl implements UserService {
 					.roles(roles)
 					.password("")
 					.isEnabled(userResponse.isEmailVerified())
+					.status(Status.ONLINE)
 					.build();
 			userRepository.save(user);
 			return getUserLoginResponse(user);
@@ -230,6 +231,7 @@ public class UserServiceImpl implements UserService {
 					.provider(Provider.FACEBOOK)
 					.roles(roles)
 					.password("")
+					.status(Status.ONLINE)
 					.isEnabled(true)
 					.build();
 			userRepository.save(user);
@@ -240,6 +242,32 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void logout(UserLogoutRequest request) {
 		refreshTokenRepository.deleteRefreshTokenByToken(request.getRefreshToken());
+	}
+
+	@Override
+	public User updateUser(Integer userId, UserUpdateRequest userCreationRequest) {
+		User existingUser = userRepository.findByUserId(userId);
+		if (existingUser == null) {
+			throw new AppException("User not found with ID " + userId, HttpStatus.NOT_FOUND);
+		}
+		existingUser.setUsername(userCreationRequest.getUsername());
+		existingUser.setFirstName(userCreationRequest.getFirstName());
+		existingUser.setLastName(userCreationRequest.getLastName());
+		return userRepository.save(existingUser);
+	}
+
+	@Override
+	public void deleteUserById(Integer userId) {
+		User existingUser = userRepository.findByUserId(userId);
+		if (existingUser == null) {
+			throw new AppException("User not found with ID " + userId, HttpStatus.NOT_FOUND);
+		}
+		userRepository.delete(existingUser);
+	}
+
+	@Override
+	public List<User> searchUsers(String query) {
+		return userRepository.findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(query, query);
 	}
 
 }
